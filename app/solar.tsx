@@ -25,7 +25,8 @@ const Solar = () => {
   const [units, setUnits] = useState<Units>("kilometres");
   const [scaleType, setScaleType] = useState<ScaleType>("logarithmic");
   const [showPiModal, setShowPiModal] = useState(false);
-
+  const [showScaleModal, setShowScaleModal] = useState(false);
+  
   return (
     <View style={styles.container}>
       <ScrollView
@@ -43,6 +44,7 @@ const Solar = () => {
           planetBodies={PLANET_BODIES}
           units={units}
           scaleType={scaleType}
+          onShowScaleModal={() => setShowScaleModal(true)}
         />
 
         <SolarControlSection

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Animated, {
   useSharedValue,
   withTiming,
@@ -8,6 +8,7 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import colors from "../theme/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 type PlanetBody = {
   name: string;
@@ -31,6 +32,7 @@ interface SolarVisualSectionProps {
   planetBodies: PlanetBody[];
   units: Units;
   scaleType: ScaleType;
+  onShowScaleModal: () => void;
 }
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -45,7 +47,13 @@ const calculateCircumference = (radius: number): number => {
   return 2 * Math.PI * radius;
 };
 
-const SolarBarChart = ({ body, units, scaleType, maxValue, index }: SolarBarChartProp) => {
+const SolarBarChart = ({
+  body,
+  units,
+  scaleType,
+  maxValue,
+  index,
+}: SolarBarChartProp) => {
   const barWidthAnim = useSharedValue(0);
   const slideAnim = useSharedValue(-20);
   const opacityAnim = useSharedValue(0);
@@ -98,7 +106,6 @@ const SolarBarChart = ({ body, units, scaleType, maxValue, index }: SolarBarChar
       width: Math.max(width, 2), // Minimum width for visibility
     };
   });
-  
 
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
@@ -123,7 +130,12 @@ const SolarBarChart = ({ body, units, scaleType, maxValue, index }: SolarBarChar
   );
 };
 
-const SolarVisualSection = ({ planetBodies, units, scaleType }: SolarVisualSectionProps) => {
+const SolarVisualSection = ({
+  planetBodies,
+  units,
+  scaleType,
+  onShowScaleModal
+}: SolarVisualSectionProps) => {
   const sectionOpacity = useSharedValue(0);
 
   useEffect(() => {
@@ -171,10 +183,26 @@ const SolarVisualSection = ({ planetBodies, units, scaleType }: SolarVisualSecti
           ))}
         </View>
       </View>
+
+      <TouchableOpacity
+        style={styles.disclaimerContainer}
+        onPress={onShowScaleModal}
+        accessibilityRole="button"
+        accessibilityLabel="Learn more about logarithmic and linear scales"
+      >
+        <Ionicons
+          name="information-circle-outline"
+          size={16}
+          color={colors["muted"]}
+        />
+        <Text style={styles.disclaimerText}>
+          Visualized in logarithmic and linear scale
+        </Text>
+      </TouchableOpacity>
     </Animated.View>
   );
-}
- 
+};
+
 export default SolarVisualSection;
 
 const styles = StyleSheet.create({
@@ -234,5 +262,17 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 6,
     opacity: 0.8,
+  },
+  disclaimerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+  },
+  disclaimerText: {
+    fontSize: 12,
+    color: colors["muted"],
+    marginLeft: 6,
   },
 });
