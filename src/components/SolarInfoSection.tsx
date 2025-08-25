@@ -142,8 +142,4 @@ const styles = StyleSheet.create({
     color: colors["muted"],
     marginLeft: 6,
   },
-  fallbackText: {
-    fontSize: 11,
-    color: colors["muted"],
-  },
 });
