@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 const RootLayout = () => {
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Stack>
         <Stack.Screen name="index" options={{ title: "Dashboard", headerShown: false }} />
         <Stack.Screen name="solar" options={{ title: "Solar", headerShown: true }} />

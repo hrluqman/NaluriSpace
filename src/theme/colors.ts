@@ -1,7 +1,9 @@
 const colors = {
-  bg: "#0B0F14",
+  background: "#0B0F14",
+  backgroundSecondary: "#1a2736ff",
   card: "#0F1720",
-  primary: "#8E1616",
+  primary: "#124170",
+  positive: '#3B82F6',
   accent: "#FFC845",
   success: "#22C55E",
   danger: "#EF4444",
