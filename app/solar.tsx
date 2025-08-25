@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Link } from "expo-router";   
+import { Link } from "expo-router";
 
-const Dashboard = () => {
+const Solar = () => {
   return (
     <View style={styles.container}>
-      <Text>Dashboard</Text>
-      <Link href="/solar">View Solar's Calculation</Link>
+      <Text>Solar</Text>
+      <Link href="/">Dashboard</Link>
     </View>
   );
 };
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dashboard;
+export default Solar;
