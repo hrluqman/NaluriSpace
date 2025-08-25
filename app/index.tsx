@@ -4,6 +4,15 @@ import colors from "../src/theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { usePi } from "../src/hooks/usePi";
 import { usePolling } from "../src/hooks/usePolling";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import { useEffect } from "react";
 
 interface ControlButtonProps {
   onPress: () => void;
@@ -24,6 +33,25 @@ const Dashboard = () => {
       : colors["muted"];
 
   usePolling(refreshStatus, 2000);
+
+  const opacity = useSharedValue(1);
+
+  useEffect(() => {
+  opacity.value = withRepeat(
+    withSequence(
+      // Fade out
+      withTiming(0.2, { duration: 1000, easing: Easing.ease }),
+      // Fade in
+      withTiming(1, { duration: 1000, easing: Easing.ease })
+    ),
+    -1, // Loop infinitely
+    true // Reverse the animation on each loop
+  );
+}, []);
+
+const animatedIconStyle = useAnimatedStyle(() => ({
+  opacity: opacity.value,
+}));
 
   const ControlButton = ({ onPress, icon, text, colorType }: ControlButtonProps) => (
     <TouchableOpacity
@@ -46,7 +74,7 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pi Dashboard</Text>
+      <Text style={styles.title}>Dashboard</Text>
       <View style={styles.cardContainer}>
         <Text style={styles.heading}>{formattedPi}</Text>
         <Text style={styles.subHeading}>Decimals: {decimalsToShow}</Text>
@@ -84,12 +112,14 @@ const Dashboard = () => {
         </View>
         <View style={styles.statusInfoContainer}>
           <Text style={styles.statusInfo}>Status:</Text>
+          <Animated.View style={state.status === "running" ? animatedIconStyle : ''}>
           <Ionicons
             name="radio-button-on"
             size={12}
             color={statusColor}
             style={{ marginHorizontal: 4 }}
           />
+          </Animated.View>
           <Text style={[styles.statusInfo, { color: statusColor }]}>
             {state.status}
           </Text>
@@ -132,7 +162,7 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     color: colors["muted"],
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 10,
   },
   statusInfoContainer: {
@@ -143,7 +173,7 @@ const styles = StyleSheet.create({
   },
   statusInfo: {
     color: colors["muted"],
-    fontSize: 16,
+    fontSize: 14,
   },
   buttonPress: {
     width: "48%",
