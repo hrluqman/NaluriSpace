@@ -2,6 +2,7 @@ import axios from "axios";
 
 type controlActionProp = "start" | "pause" | "stop" | "reset";
 
+// For Expo on device, replace with your machine's LAN IP, e.g. http://192.168.1.10:3001
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
 
 const client = axios.create({ baseURL: BASE_URL, timeout: 5000 });

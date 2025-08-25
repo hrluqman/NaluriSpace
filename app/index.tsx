@@ -2,79 +2,97 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import colors from "../src/theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { usePi } from "../src/hooks/usePi";
+import { usePolling } from "../src/hooks/usePolling";
+
+interface ControlButtonProps {
+  onPress: () => void;
+  icon: "play" | "pause" | "stop" | "refresh";
+  text: string;
+  colorType: "positive" | "danger" | "backgroundSecondary";
+}
 
 const Dashboard = () => {
+  const { state, start, pause, stop, reset, loading, refreshStatus } = usePi();
+  const decimalsToShow = Math.min(Math.floor(state.iteration / 3), 15);
+  const formattedPi = Number(state.pi).toFixed(decimalsToShow);
+  const statusColor =
+    state.status === "running"
+      ? colors["success"]
+      : state.status === "stopped"
+      ? colors["danger"]
+      : colors["muted"];
+
+  usePolling(refreshStatus, 2000);
+
+  const ControlButton = ({ onPress, icon, text, colorType }: ControlButtonProps) => (
+    <TouchableOpacity
+      style={[
+        styles.buttonPress,
+        { backgroundColor: colors[colorType] },
+      ]}
+      onPress={onPress}
+      disabled={loading}
+    >
+      <Ionicons
+        name={icon}
+        size={16}
+        color="white"
+        style={styles.buttonPressIcon}
+      />
+      <Text style={styles.buttonPressText}>{text}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pi Dashboard</Text>
       <View style={styles.cardContainer}>
-        <Text style={styles.heading}>3.141565</Text>
-        <Text style={styles.subHeading}>Decimals: 4</Text>
-        <Text style={styles.subHeading}>Iteration: 44</Text>
+        <Text style={styles.heading}>{formattedPi}</Text>
+        <Text style={styles.subHeading}>Decimals: {decimalsToShow}</Text>
+        <Text style={styles.subHeading}>Iteration: {state.iteration}</Text>
 
         <View
           style={[
             { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 16 },
           ]}
         >
-          <TouchableOpacity
-            style={[
-              styles.buttonPress,
-              { backgroundColor: colors["positive"] },
-            ]}
-          >
-            <Ionicons
-              name="play"
-              size={16}
-              color="white"
-              style={styles.buttonPressIcon}
-            />
-            <Text style={styles.buttonPressText}>Start</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.buttonPress,
-              { backgroundColor: colors["backgroundSecondary"] },
-            ]}
-          >
-            <Ionicons
-              name="pause"
-              size={16}
-              color="white"
-              style={styles.buttonPressIcon}
-            />
-            <Text style={styles.buttonPressText}>Pause</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buttonPress, { backgroundColor: colors["danger"] }]}
-          >
-            <Ionicons
-              name="stop"
-              size={16}
-              color="white"
-              style={styles.buttonPressIcon}
-            />
-            <Text style={styles.buttonPressText}>Stop</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.buttonPress,
-              { backgroundColor: colors["backgroundSecondary"] },
-            ]}
-          >
-            <Ionicons
-              name="refresh"
-              size={16}
-              color="white"
-              style={styles.buttonPressIcon}
-            />
-            <Text style={styles.buttonPressText}>Reset</Text>
-          </TouchableOpacity>
+          <ControlButton
+            onPress={start}
+            icon="play"
+            text="Start"
+            colorType="positive"
+          />
+          <ControlButton 
+            onPress={pause}
+            icon="pause"
+            text="Pause"
+            colorType="backgroundSecondary"
+          />
+          <ControlButton
+            onPress={stop}
+            icon="stop"
+            text="Stop"
+            colorType="danger"
+          />
+          <ControlButton
+            onPress={reset}
+            icon="refresh"
+            text="Reset"
+            colorType="backgroundSecondary"
+          />
         </View>
         <View style={styles.statusInfoContainer}>
           <Text style={styles.statusInfo}>Status:</Text>
-          <Ionicons name="radio-button-on" size={12} color={colors["success"]} style={{ marginHorizontal: 4 }} />
-          <Text style={[styles.statusInfo, { color: colors["success"] }]}>running</Text>
+          <Ionicons
+            name="radio-button-on"
+            size={12}
+            color={statusColor}
+            style={{ marginHorizontal: 4 }}
+          />
+          <Text style={[styles.statusInfo, { color: statusColor }]}>
+            {state.status}
+          </Text>
         </View>
       </View>
       <Link href="/solar" style={styles.buttonLink}>
