@@ -7,19 +7,14 @@ type Units = "kilometres" | "miles";
 
 type ScaleType = "logarithmic" | "linear";
 
-interface Props {
+interface SolarControlSectionProps {
   units: Units;
   scaleType: ScaleType;
   onUnitsChange: (units: Units) => void;
   onScaleChange: (scale: ScaleType) => void;
 }
 
-export default function SolarControlSection({
-  units,
-  scaleType,
-  onUnitsChange,
-  onScaleChange,
-}: Props) {
+const SolarControlSection = ({ units, scaleType, onUnitsChange, onScaleChange }: SolarControlSectionProps) => {
 
   return (
     <View style={styles.section}>
@@ -46,6 +41,8 @@ export default function SolarControlSection({
     </View>
   );
 }
+ 
+export default SolarControlSection;
 
 const styles = StyleSheet.create({
   section: {
