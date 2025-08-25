@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import colors from "../src/theme/colors";
 import SolarInfoSection from "../src/components/SolarInfoSection";
+import SolarControlSection from "../src/components/SolarControlSection";
 
 type PlanetBody = {
   name: string;
@@ -21,6 +22,7 @@ const PLANET_BODIES: PlanetBody[] = [
 
 const Solar = () => {
   const [units, setUnits] = useState<Units>("kilometres");
+  const [scaleType, setScaleType] = useState<ScaleType>("logarithmic");
   const [showPiModal, setShowPiModal] = useState(false);
 
   return (
@@ -34,6 +36,13 @@ const Solar = () => {
           planetBodies={PLANET_BODIES}
           units={units}
           onShowPiModal={() => setShowPiModal(true)}
+        />
+
+        <SolarControlSection
+          units={units}
+          scaleType={scaleType}
+          onUnitsChange={setUnits}
+          onScaleChange={setScaleType}
         />
       </ScrollView>
     </View>
