@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Switch } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import colors from "../theme/colors";
 
@@ -14,13 +14,41 @@ interface SolarControlSectionProps {
   onScaleChange: (scale: ScaleType) => void;
 }
 
-const SolarControlSection = ({ units, scaleType, onUnitsChange, onScaleChange }: SolarControlSectionProps) => {
-
+const SolarControlSection = ({
+  units,
+  scaleType,
+  onUnitsChange,
+  onScaleChange,
+}: SolarControlSectionProps) => {
   return (
     <View style={styles.section}>
       <Text style={styles.sectionHeader}>Control:</Text>
 
       <View style={styles.card}>
+        <View style={styles.controlGroup}>
+          <View style={styles.switchContainer}>
+            <Text style={[styles.controlLabel, { marginBottom: 0 }]}>
+              View True Scale
+            </Text>
+            <Switch
+              value={scaleType === "linear"}
+              onValueChange={(value) =>
+                onScaleChange(value ? "linear" : "logarithmic")
+              }
+              trackColor={{
+                false: "#2C2C2E",
+                true: "#4A90E2",
+              }}
+              thumbColor={scaleType === "linear" ? "#FFFFFF" : "#A0A0A0"}
+              ios_backgroundColor="#2C2C2E"
+              style={styles.switch}
+              accessibilityLabel="Toggle between logarithmic and linear scale"
+              accessibilityRole="switch"
+              accessibilityState={{ checked: scaleType === "linear" }}
+            />
+          </View>
+        </View>
+
         <View style={styles.controlGroup}>
           <Text style={styles.controlLabel}>Units</Text>
           <SegmentedControl
@@ -40,8 +68,8 @@ const SolarControlSection = ({ units, scaleType, onUnitsChange, onScaleChange }:
       </View>
     </View>
   );
-}
- 
+};
+
 export default SolarControlSection;
 
 const styles = StyleSheet.create({
@@ -74,5 +102,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors["text"],
     marginBottom: 12,
-  }
+  },
+  switchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  switch: {
+    transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }],
+  },
 });
