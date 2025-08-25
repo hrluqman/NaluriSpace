@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import colors from "../src/theme/colors";
 import SolarInfoSection from "../src/components/SolarInfoSection";
 import SolarControlSection from "../src/components/SolarControlSection";
+import SolarVisualSection from "../src/components/SolarVisualSection";
 
 type PlanetBody = {
   name: string;
@@ -36,6 +37,12 @@ const Solar = () => {
           planetBodies={PLANET_BODIES}
           units={units}
           onShowPiModal={() => setShowPiModal(true)}
+        />
+
+        <SolarVisualSection
+          planetBodies={PLANET_BODIES}
+          units={units}
+          scaleType={scaleType}
         />
 
         <SolarControlSection
