@@ -1,6 +1,7 @@
 import { createContext, useState, useCallback, useEffect } from "react";
 import * as api from "../services/api";
 import { getItemJSON, setItemJSON, STORAGE_KEYS } from "../services/storage";
+import { Alert, Platform, ToastAndroid } from "react-native";
 
 type PiState = {
   pi: string;
@@ -25,6 +26,14 @@ type controlActionValue = "start" | "pause" | "stop" | "reset";
 const DEFAULT_STATE: PiState = { pi: "0", status: "stopped", iteration: 0 };
 
 export const PiContext = createContext<PiContextValue | undefined>(undefined);
+
+function showOfflineToast(message = "Offline — action not available") {
+  if (Platform.OS === "android") {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  } else {
+    Alert.alert("Offline", message);
+  }
+}
 
 export function PiProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<PiState>(DEFAULT_STATE);
@@ -53,7 +62,7 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
   const refreshStatus = useCallback(async () => {
     try {
       const data = await api.getStatus();
-      if (data && typeof data === 'object') {
+      if (data && typeof data === "object") {
         setState(data);
         setError(null);
         setOffline(false);
@@ -61,7 +70,7 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
         await setItemJSON(STORAGE_KEYS.LAST_STATE, data);
       }
     } catch (err: any) {
-      setError(err?.message ?? 'Failed to fetch status');
+      setError(err?.message ?? "Failed to fetch status");
       setOffline(true);
       // keep previous / cached state visible
     }
@@ -71,18 +80,24 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const data = await api.setControl(action);
-      if (data && typeof data === 'object') {
+      if (data && typeof data === "object") {
         setState(data);
         setError(null);
         setOffline(false);
         await setItemJSON(STORAGE_KEYS.LAST_STATE, data);
       }
     } catch (err: any) {
-      setError(err?.message ?? 'Control action failed');
+      setError(err?.message ?? "Control action failed");
       setOffline(true);
       // do not overwrite last known state
     } finally {
       setLoading(false);
+      if (offline) {
+        showOfflineToast(
+          "You are offline — action cannot be performed right now."
+        );
+        return;
+      }
     }
   }, []);
 
