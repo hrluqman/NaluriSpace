@@ -6,6 +6,7 @@ import SolarControlSection from "../src/components/SolarControlSection";
 import SolarVisualSection from "../src/components/SolarVisualSection";
 import PiModal from "../src/components/PiModal";
 import ScaleModal from "../src/components/ScaleModal";
+import { usePi } from "../src/hooks/usePi";
 
 type PlanetBody = {
   name: string;
@@ -24,6 +25,7 @@ const PLANET_BODIES: PlanetBody[] = [
 ];
 
 const Solar = () => {
+  const { state } = usePi();
   const [units, setUnits] = useState<Units>("kilometres");
   const [scaleType, setScaleType] = useState<ScaleType>("logarithmic");
   const [showPiModal, setShowPiModal] = useState(false);
@@ -37,12 +39,14 @@ const Solar = () => {
         showsVerticalScrollIndicator={false}
       >
         <SolarInfoSection
+          piValue={state.pi}
           planetBodies={PLANET_BODIES}
           units={units}
           onShowPiModal={() => setShowPiModal(true)}
         />
 
         <SolarVisualSection
+          piValue={state.pi}
           planetBodies={PLANET_BODIES}
           units={units}
           scaleType={scaleType}
