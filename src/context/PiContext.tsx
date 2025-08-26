@@ -9,7 +9,7 @@ type PiState = {
   iteration: number;
 };
 
-type PiContextValue = {
+export type PiContextValue = {
   state: PiState;
   loading: boolean;
   error?: string | null;
