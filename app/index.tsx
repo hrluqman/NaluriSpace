@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Link } from "expo-router";
 import colors from "../src/theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -11,8 +17,9 @@ import Animated, {
   withSequence,
   withTiming,
   Easing,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import { useEffect } from "react";
+import LoadingIndicator from "../src/components/LoadingIndicator";
 
 interface ControlButtonProps {
   onPress: () => void;
@@ -37,28 +44,30 @@ const Dashboard = () => {
   const opacity = useSharedValue(1);
 
   useEffect(() => {
-  opacity.value = withRepeat(
-    withSequence(
-      // Fade out
-      withTiming(0.2, { duration: 1000, easing: Easing.ease }),
-      // Fade in
-      withTiming(1, { duration: 1000, easing: Easing.ease })
-    ),
-    -1, // Loop infinitely
-    true // Reverse the animation on each loop
-  );
-}, []);
+    opacity.value = withRepeat(
+      withSequence(
+        // Fade out
+        withTiming(0.2, { duration: 1000, easing: Easing.ease }),
+        // Fade in
+        withTiming(1, { duration: 1000, easing: Easing.ease })
+      ),
+      -1, // Loop infinitely
+      true // Reverse the animation on each loop
+    );
+  }, []);
 
-const animatedIconStyle = useAnimatedStyle(() => ({
-  opacity: opacity.value,
-}));
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
-  const ControlButton = ({ onPress, icon, text, colorType }: ControlButtonProps) => (
+  const ControlButton = ({
+    onPress,
+    icon,
+    text,
+    colorType,
+  }: ControlButtonProps) => (
     <TouchableOpacity
-      style={[
-        styles.buttonPress,
-        { backgroundColor: colors[colorType] },
-      ]}
+      style={[styles.buttonPress, { backgroundColor: colors[colorType] }]}
       onPress={onPress}
       disabled={loading}
     >
@@ -91,7 +100,7 @@ const animatedIconStyle = useAnimatedStyle(() => ({
             text="Start"
             colorType="positive"
           />
-          <ControlButton 
+          <ControlButton
             onPress={pause}
             icon="pause"
             text="Pause"
@@ -112,13 +121,15 @@ const animatedIconStyle = useAnimatedStyle(() => ({
         </View>
         <View style={styles.statusInfoContainer}>
           <Text style={styles.statusInfo}>Status:</Text>
-          <Animated.View style={state.status === "running" ? animatedIconStyle : ''}>
-          <Ionicons
-            name="radio-button-on"
-            size={12}
-            color={statusColor}
-            style={{ marginHorizontal: 4 }}
-          />
+          <Animated.View
+            style={state.status === "running" ? animatedIconStyle : ""}
+          >
+            <Ionicons
+              name="radio-button-on"
+              size={12}
+              color={statusColor}
+              style={{ marginHorizontal: 4 }}
+            />
           </Animated.View>
           <Text style={[styles.statusInfo, { color: statusColor }]}>
             {state.status}
@@ -128,6 +139,8 @@ const animatedIconStyle = useAnimatedStyle(() => ({
       <Link href="/solar" style={styles.buttonLink}>
         View Solar's Calculation
       </Link>
+
+      {loading && <LoadingIndicator />}
     </View>
   );
 };
