@@ -12,6 +12,7 @@ type PlanetBody = {
 type Units = "kilometres" | "miles";
 
 interface SolarInfoSectionProps {
+  piValue: string;
   planetBodies: PlanetBody[];
   units: Units;
   onShowPiModal: () => void;
@@ -27,14 +28,21 @@ const kmToMiles = (km: number): number => {
   return km * 0.621371;
 };
 
-const calculateCircumference = (radius: number): number => {
-  return 2 * Math.PI * radius;
+const calculateCircumference = (piValue: string, radius: number): number => {
+  const pi = parseFloat(piValue);
+
+  // Check if the conversion was successful
+  if (isNaN(pi)) {
+    throw new Error("Invalid piValue provided. It could not be converted to a number.");
+  }
+
+  return 2 * pi * radius;
 };
 
-const SolarCard = ({ body, units }: { body: PlanetBody; units: Units }) => {
+const SolarCard = ({ body, units, piValue }: { body: PlanetBody; units: Units; piValue: string }) => {
   const radius =
     units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-  const circumference = calculateCircumference(radius);
+  const circumference = calculateCircumference(piValue, radius);
   const unitLabel = units;
 
   return (
@@ -51,6 +59,7 @@ const SolarCard = ({ body, units }: { body: PlanetBody; units: Units }) => {
 };
 
 const SolarInfoSection = ({
+  piValue,
   planetBodies,
   units,
   onShowPiModal,
@@ -61,7 +70,7 @@ const SolarInfoSection = ({
 
       <View style={styles.cardsContainer}>
         {planetBodies.map((body) => (
-          <SolarCard key={body.name} body={body} units={units} />
+          <SolarCard key={body.name} body={body} units={units} piValue={piValue} />
         ))}
       </View>
 
@@ -77,7 +86,7 @@ const SolarInfoSection = ({
           color={colors["muted"]}
         />
         <Text style={styles.disclaimerText}>
-          Calculated using π ≈ 3.14159265...
+          Calculated using π ≈ {piValue}...
         </Text>
       </TouchableOpacity>
     </View>
