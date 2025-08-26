@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { calculateCircumference } from "../utils/calc";
 
 type PlanetBody = {
   name: string;
@@ -24,25 +25,8 @@ const formatNumber = (num: number): string => {
   });
 };
 
-const kmToMiles = (km: number): number => {
-  return km * 0.621371;
-};
-
-const calculateCircumference = (piValue: string, radius: number): number => {
-  const pi = parseFloat(piValue);
-
-  // Check if the conversion was successful
-  if (isNaN(pi)) {
-    throw new Error("Invalid piValue provided. It could not be converted to a number.");
-  }
-
-  return 2 * pi * radius;
-};
-
 const SolarCard = ({ body, units, piValue }: { body: PlanetBody; units: Units; piValue: string }) => {
-  const radius =
-    units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-  const circumference = calculateCircumference(piValue, radius);
+  const circumference = calculateCircumference(piValue, body.radiusKm, units);
   const unitLabel = units;
 
   return (
