@@ -4,6 +4,8 @@ import colors from "../src/theme/colors";
 import SolarInfoSection from "../src/components/SolarInfoSection";
 import SolarControlSection from "../src/components/SolarControlSection";
 import SolarVisualSection from "../src/components/SolarVisualSection";
+import PiModal from "../src/components/PiModal";
+import ScaleModal from "../src/components/ScaleModal";
 
 type PlanetBody = {
   name: string;
@@ -54,6 +56,14 @@ const Solar = () => {
           onScaleChange={setScaleType}
         />
       </ScrollView>
+      <PiModal
+        visible={showPiModal}
+        onClose={() => setShowPiModal(false)}
+      />
+      <ScaleModal
+        visible={showScaleModal}
+        onClose={() => setShowScaleModal(false)}
+      />
     </View>
   );
 };
