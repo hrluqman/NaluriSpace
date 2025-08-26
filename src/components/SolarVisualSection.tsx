@@ -9,6 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import colors from "../theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { calculateCircumference } from "../utils/calc";
 
 type PlanetBody = {
   name: string;
@@ -41,21 +42,6 @@ const { width: screenWidth } = Dimensions.get("window");
 
 const chartWidth = screenWidth - 32 - 32;
 
-const kmToMiles = (km: number): number => {
-  return km * 0.621371;
-};
-
-const calculateCircumference = (piValue: string, radius: number): number => {
-  const pi = parseFloat(piValue);
-
-  // Check if the conversion was successful
-  if (isNaN(pi)) {
-    throw new Error("Invalid piValue provided. It could not be converted to a number.");
-  }
-
-  return 2 * pi * radius;
-};
-
 const SolarBarChart = ({
   body,
   units,
@@ -68,9 +54,7 @@ const SolarBarChart = ({
   const slideAnim = useSharedValue(-20);
   const opacityAnim = useSharedValue(0);
 
-  const radius =
-    units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-  const circumference = calculateCircumference(piValue, radius);
+  const circumference = calculateCircumference(piValue, body.radiusKm, units);
 
   useEffect(() => {
     const delay = index * 100;
@@ -166,9 +150,7 @@ const SolarVisualSection = ({
   // Calculate max value for scaling
   const maxCircumference = Math.max(
     ...planetBodies.map((body) => {
-      const radius =
-        units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-      return calculateCircumference(piValue, radius);
+      return calculateCircumference(piValue, body.radiusKm, units);
     })
   );
 
