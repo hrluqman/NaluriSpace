@@ -26,9 +26,11 @@ interface SolarBarChartProp {
   scaleType: ScaleType;
   maxValue: number;
   index: number;
+  piValue: string;
 }
 
 interface SolarVisualSectionProps {
+  piValue: string;
   planetBodies: PlanetBody[];
   units: Units;
   scaleType: ScaleType;
@@ -43,8 +45,15 @@ const kmToMiles = (km: number): number => {
   return km * 0.621371;
 };
 
-const calculateCircumference = (radius: number): number => {
-  return 2 * Math.PI * radius;
+const calculateCircumference = (piValue: string, radius: number): number => {
+  const pi = parseFloat(piValue);
+
+  // Check if the conversion was successful
+  if (isNaN(pi)) {
+    throw new Error("Invalid piValue provided. It could not be converted to a number.");
+  }
+
+  return 2 * pi * radius;
 };
 
 const SolarBarChart = ({
@@ -53,6 +62,7 @@ const SolarBarChart = ({
   scaleType,
   maxValue,
   index,
+  piValue,
 }: SolarBarChartProp) => {
   const barWidthAnim = useSharedValue(0);
   const slideAnim = useSharedValue(-20);
@@ -60,7 +70,7 @@ const SolarBarChart = ({
 
   const radius =
     units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-  const circumference = calculateCircumference(radius);
+  const circumference = calculateCircumference(piValue, radius);
 
   useEffect(() => {
     const delay = index * 100;
@@ -96,7 +106,7 @@ const SolarBarChart = ({
   }, [circumference, maxValue, scaleType, barWidthAnim]);
 
   const animatedBarStyle = useAnimatedStyle(() => {
-    const width = interpolate(
+    const width = piValue == "0" ? 0 : interpolate(
       barWidthAnim.value,
       [0, 1],
       [0, chartWidth * 0.7]
@@ -131,6 +141,7 @@ const SolarBarChart = ({
 };
 
 const SolarVisualSection = ({
+  piValue,
   planetBodies,
   units,
   scaleType,
@@ -157,7 +168,7 @@ const SolarVisualSection = ({
     ...planetBodies.map((body) => {
       const radius =
         units === "kilometres" ? body.radiusKm : kmToMiles(body.radiusKm);
-      return calculateCircumference(radius);
+      return calculateCircumference(piValue, radius);
     })
   );
 
@@ -179,6 +190,7 @@ const SolarVisualSection = ({
               scaleType={scaleType}
               maxValue={maxCircumference}
               index={index}
+              piValue={piValue}
             />
           ))}
         </View>
