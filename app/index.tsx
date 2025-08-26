@@ -18,8 +18,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import { useEffect } from "react";
-import LoadingIndicator from "../src/components/LoadingIndicator";
+import { useEffect, useRef } from "react";
 
 interface ControlButtonProps {
   onPress: () => void;
@@ -60,26 +59,40 @@ const Dashboard = () => {
     opacity: opacity.value,
   }));
 
+  const activeAction = useRef("");
+
+  useEffect(() => {
+    if (!loading) activeAction.current = "";
+  }, [loading, state]);
+
   const ControlButton = ({
     onPress,
     icon,
     text,
     colorType,
-  }: ControlButtonProps) => (
-    <TouchableOpacity
-      style={[styles.buttonPress, { backgroundColor: colors[colorType] }]}
-      onPress={onPress}
-      disabled={loading}
-    >
-      <Ionicons
-        name={icon}
-        size={16}
-        color="white"
-        style={styles.buttonPressIcon}
-      />
-      <Text style={styles.buttonPressText}>{text}</Text>
-    </TouchableOpacity>
-  );
+  }: ControlButtonProps) => {
+    const isBusy = activeAction.current === text;
+
+    return (
+      <TouchableOpacity
+        style={[styles.buttonPress, { backgroundColor: colors[colorType] }]}
+        onPress={onPress}
+        disabled={loading}
+      >
+        {isBusy && loading ? (
+          <ActivityIndicator color="white" style={{ marginRight: 6 }} />
+        ) : (
+          <Ionicons
+            name={icon}
+            size={16}
+            color="white"
+            style={styles.buttonPressIcon}
+          />
+        )}
+        <Text style={styles.buttonPressText}>{text}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -95,25 +108,37 @@ const Dashboard = () => {
           ]}
         >
           <ControlButton
-            onPress={start}
+            onPress={() => {
+              activeAction.current = "Start";
+              start();
+            }}
             icon="play"
             text="Start"
             colorType="positive"
           />
           <ControlButton
-            onPress={pause}
+            onPress={() => {
+              activeAction.current = "Pause";
+              pause();
+            }}
             icon="pause"
             text="Pause"
             colorType="backgroundSecondary"
           />
           <ControlButton
-            onPress={stop}
+            onPress={() => {
+              activeAction.current = "Stop";
+              stop();
+            }}
             icon="stop"
             text="Stop"
             colorType="danger"
           />
           <ControlButton
-            onPress={reset}
+            onPress={() => {
+              activeAction.current = "Reset";
+              reset();
+            }}
             icon="refresh"
             text="Reset"
             colorType="backgroundSecondary"
@@ -139,8 +164,6 @@ const Dashboard = () => {
       <Link href="/solar" style={styles.buttonLink}>
         View Solar's Calculation
       </Link>
-
-      {loading && <LoadingIndicator />}
     </View>
   );
 };
