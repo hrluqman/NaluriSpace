@@ -13,7 +13,6 @@ type PiContextValue = {
   state: PiState;
   loading: boolean;
   error?: string | null;
-  offline: boolean;
   refreshStatus: () => Promise<void>;
   start: () => Promise<void>;
   pause: () => Promise<void>;
@@ -27,11 +26,11 @@ const DEFAULT_STATE: PiState = { pi: "0", status: "stopped", iteration: 0 };
 
 export const PiContext = createContext<PiContextValue | undefined>(undefined);
 
-function showOfflineToast(message = "Offline — action not available") {
+function showErrorToast(message = "Error — action not available") {
   if (Platform.OS === "android") {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   } else {
-    Alert.alert("Offline", message);
+    Alert.alert("Error", message);
   }
 }
 
@@ -39,7 +38,6 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<PiState>(DEFAULT_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [offline, setOffline] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -50,7 +48,7 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
         console.warn("PiProvider failed to load cached state", err);
       }
 
-      // Fire an initial refresh; if it fails offline will be set inside refreshStatus
+      // Fire an initial refresh
       try {
         await refreshStatus();
       } catch (_) {
@@ -65,13 +63,11 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
       if (data && typeof data === "object") {
         setState(data);
         setError(null);
-        setOffline(false);
         // persist last successful state
         await setItemJSON(STORAGE_KEYS.LAST_STATE, data);
       }
     } catch (err: any) {
       setError(err?.message ?? "Failed to fetch status");
-      setOffline(true);
       // keep previous / cached state visible
     }
   }, []);
@@ -83,21 +79,14 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
       if (data && typeof data === "object") {
         setState(data);
         setError(null);
-        setOffline(false);
         await setItemJSON(STORAGE_KEYS.LAST_STATE, data);
       }
     } catch (err: any) {
       setError(err?.message ?? "Control action failed");
-      setOffline(true);
+      showErrorToast("Action cannot be performed at the moment.");
       // do not overwrite last known state
     } finally {
       setLoading(false);
-      if (offline) {
-        showOfflineToast(
-          "You are offline — action cannot be performed right now."
-        );
-        return;
-      }
     }
   }, []);
 
@@ -112,7 +101,6 @@ export function PiProvider({ children }: { children: React.ReactNode }) {
         state,
         loading,
         error,
-        offline,
         refreshStatus,
         start,
         pause,
