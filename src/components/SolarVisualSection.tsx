@@ -61,13 +61,11 @@ const SolarBarChart = ({
 
     slideAnim.value = withTiming(0, {
       duration: 300,
-      //   delay,
       easing: Easing.out(Easing.cubic),
     });
 
     opacityAnim.value = withTiming(1, {
       duration: 300,
-      //   delay,
       easing: Easing.out(Easing.cubic),
     });
   }, [slideAnim, opacityAnim, index]);
@@ -136,7 +134,6 @@ const SolarVisualSection = ({
   useEffect(() => {
     sectionOpacity.value = withTiming(1, {
       duration: 400,
-      //   delay: 200,
       easing: Easing.out(Easing.cubic),
     });
   }, [sectionOpacity]);
