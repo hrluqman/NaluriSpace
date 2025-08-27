@@ -29,7 +29,6 @@ So that I can observe progress and start/pause/stop/reset the calculation.
 **Given** the current status is `stopped` or `paused`  
 **When** the user taps the **Start** button  
 **Then** the Start button shows a spinner while the request is in-flight  
-**And** the app sends `POST /control` with `{ "action": "start" }`  
 **And** when the request succeeds the Dashboard reflects the new `status` and `pi` returned by the server.
 
 ### Scenario: Pause action
@@ -37,7 +36,6 @@ So that I can observe progress and start/pause/stop/reset the calculation.
 **Given** the current status is `running`  
 **When** the user taps the **Pause** button  
 **Then** the Pause button shows a spinner while the request is in-flight  
-**And** the app sends `POST /control` with `{ "action": "pause" }`  
 **And** when the request succeeds the Dashboard shows `status: paused` and preserves `pi` and `iteration`.
 
 ### Scenario: Stop action
@@ -45,7 +43,6 @@ So that I can observe progress and start/pause/stop/reset the calculation.
 **Given** the current status is `running`  
 **When** the user taps the **Stop** button  
 **Then** the Stop button shows a spinner while the request is in-flight  
-**And** the app sends `POST /control` with `{ "action": "stop" }`  
 **And** on success the Dashboard shows `status: stopped` and preserves the final `pi` and `iteration`.
 
 ### Scenario: Reset action
@@ -53,21 +50,13 @@ So that I can observe progress and start/pause/stop/reset the calculation.
 **Given** any current status  
 **When** the user taps the **Reset** button  
 **Then** the Reset button shows a spinner while the request is in-flight  
-**And** the app sends `POST /control` with `{ "action": "reset" }`  
 **And** on success the Dashboard shows the reset state: `pi: "0"`, `iteration: 0`, `status: stopped`.
 
-### Scenario: Per-control loading behavior
-
-**Given** multiple control buttons are visible  
-**When** the user triggers a control action  
-**Then** only the triggered button shows a spinner while its request runs  
-**And** the other buttons remain interactive (unless a global loading state applies)
-
-### Scenario: Offline cached fallback
+### Scenario: Error fallback
 
 **Given** the backend becomes unreachable  
 **When** the Dashboard fails to fetch `/status`  
-**Then** the app shows a visible banner: `Offline — showing cached values`  
+**Then** the app shows a visible alert: `Action cannot be performed at the moment.`  
 **And** the UI continues to display the last persisted `pi`, `status`, and `iteration`.
 
 ### Scenario: Error handling on control fail
@@ -89,15 +78,15 @@ So that I can compare sizes and visualise them on a log scale.
 
 **Given** the app has a current `pi` value  
 **When** the user opens the Solar Calculator screen  
-**Then** the app calculates circumference as `2 * π * radius` for each body using the live/cached `pi`  
+**Then** the app calculates circumference as `2 * π * radius` for each solar body using the live/cached `pi`  
 **And** displays the results formatted with thousands separators.
 
 ### Scenario: Display three body cards
 
-**Given** the Solar Calculator is visible  
+**Given** the app has a current `pi` value  
 **When** the app computes circumferences  
-**Then** it shows three cards: Sun, Earth, Mars  
-**And** each card shows body name, radius, formatted circumference, and unit label.
+**Then** it shows the value on three cards: Sun, Earth, Mars
+**And** each card shows body name, formatted circumference, and unit label.
 
 ### Scenario: Log-scale visualization
 
@@ -111,13 +100,13 @@ So that I can compare sizes and visualise them on a log scale.
 **Given** the visualization is in log-scale  
 **When** the user toggles `View True Scale`  
 **Then** the visualization transitions to linear scale with a smooth animation  
-**And** axis labels/ticks update to reflect the linear mapping.
+**And** labels update to reflect the linear mapping.
 
 ### Scenario: Unit toggle (km / miles)
 
 **Given** the user toggles the unit control  
 **When** the unit is changed  
-**Then** the app recalculates circunferences in the selected unit  
+**Then** the app recalculates circumferences in the selected unit  
 **And** updates the cards and visualization accordingly.
 
 ---
