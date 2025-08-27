@@ -17,13 +17,14 @@ import Animated, {
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import colors from "../theme/colors";
+import { Image } from "expo-image";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
 
-export default function PiModal({ visible, onClose }: Props) {
+export default function LeibnizModal({ visible, onClose }: Props) {
   const backdropOpacity = useSharedValue(0);
   const modalScale = useSharedValue(0.8);
   const modalOpacity = useSharedValue(0);
@@ -98,7 +99,7 @@ export default function PiModal({ visible, onClose }: Props) {
 
         <Animated.View style={[styles.modal, animatedModalStyle]}>
           <View style={styles.header}>
-            <Text style={styles.title}>About π (Pi)</Text>
+            <Text style={styles.title}>Leibniz Series for π</Text>
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeButton}
@@ -118,31 +119,71 @@ export default function PiModal({ visible, onClose }: Props) {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.description}>
-              Pi (π) is a mathematical constant representing the ratio of a
-              circle's circumference to its diameter.
+              The Leibniz series is a simple but famous way to approximate π
+              using an infinite alternating sum:
             </Text>
 
-            <Text style={styles.formula}>Circumference = 2πr</Text>
+            <View style={styles.formula}>
+              <Image
+                style={styles.image}
+                source={require("../../assets/images/leibniz_series.png")}
+                placeholder={"leibniz_series"}
+                contentFit="cover"
+                transition={300}
+              />
+            </View>
 
             <Text style={styles.description}>
-              Where r is the radius of the circle. For our calculations, we use
-              π ≈ 3.14159265358979..., which provides high precision for
-              astronomical measurements.
+              After summing n iterations, the error is no larger than:
             </Text>
+
+            <View style={styles.formula}>
+              <Image
+                style={styles.image}
+                source={require("../../assets/images/error_bound.png")}
+                placeholder={"leibniz_series"}
+                contentFit="cover"
+                transition={300}
+              />
+            </View>
+
+            <Text style={[styles.description, { marginBottom: 8 }]}>
+              Here's how many iterations you need for correct decimal places:
+            </Text>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={styles.subDescription}>
+                • 1 decimal place: ~40 iterations
+              </Text>
+              <Text style={styles.subDescription}>
+                • 2 decimals: ~400 iterations
+              </Text>
+              <Text style={styles.subDescription}>
+                • 3 decimals: ~4,000 iterations
+              </Text>
+              <Text style={styles.subDescription}>
+                • 4 decimals: ~40,000 iterations
+              </Text>
+              <Text style={styles.subDescription}>
+                • 5 decimals: ~400,000 iterations
+              </Text>
+            </View>
 
             <View style={styles.factBox}>
               <Text style={styles.factTitle}>Did you know?</Text>
               <Text style={styles.factText}>
-                π is an irrational number, meaning its decimal representation
-                never ends or repeats. It has been calculated to over 100
-                trillion decimal places!
+                Did you know that if you used the Leibniz series to compute π to
+                the same precision NASA uses for calculating spacecraft
+                trajectories across the solar system (about 15 decimal places),
+                you'd need over 10 trillion iterations? That's more than the
+                number of stars you can see in the night sky!
               </Text>
             </View>
 
             <Text style={styles.description}>
-              The circumferences calculated in this app represent the distances
-              you would travel if you could walk around the equator of each
-              celestial body.
+              While the Leibniz series is simple and beautiful, its inefficiency
+              shows why modern algorithms are essential for today's complex
+              calculations. Still, it's a fantastic way to explore the elegance
+              of mathematics and infinite series!
             </Text>
           </ScrollView>
         </Animated.View>
@@ -210,12 +251,18 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginBottom: 16,
   },
-  formula: {
-    fontSize: 18,
+  subDescription: {
+    fontSize: 15,
     color: colors["text"],
-    textAlign: "center",
+    lineHeight: 22,
+    fontStyle: "italic",
+  },
+  formula: {
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors["backgroundSecondary"],
-    padding: 16,
+    paddingVertical: 8,
+    paddingLeft: 16,
     borderRadius: 8,
     marginBottom: 16,
     fontVariant: ["tabular-nums"],
@@ -237,5 +284,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors["muted"],
     lineHeight: 20,
+  },
+  image: {
+    flex: 1,
+    width: "70%",
+    height: 70,
+    transform: [{ translateX: -8 }],
   },
 });
