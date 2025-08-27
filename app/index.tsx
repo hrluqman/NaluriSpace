@@ -19,6 +19,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useEffect, useRef } from "react";
+import * as Progress from "react-native-progress";
 
 interface ControlButtonProps {
   onPress: () => void;
@@ -46,6 +47,8 @@ const Dashboard = () => {
   const piNum = Number.isFinite(parsedPi) ? parsedPi : Math.PI;
   const formattedPi = piNum.toFixed(decimalsToShow);
 
+  const progress = Math.min(guaranteedDecimals / TARGET_DECIMALS, 1);
+
   const statusColor =
     state.status === "running"
       ? colors["success"]
@@ -56,7 +59,6 @@ const Dashboard = () => {
   usePolling(refreshStatus, 2000);
 
   const opacity = useSharedValue(1);
-
   useEffect(() => {
     opacity.value = withRepeat(
       withSequence(
@@ -75,7 +77,6 @@ const Dashboard = () => {
   }));
 
   const activeAction = useRef("");
-
   useEffect(() => {
     if (!loading) activeAction.current = "";
   }, [loading, state]);
@@ -109,6 +110,22 @@ const Dashboard = () => {
     );
   };
 
+  const ProgressBar = () => (
+    <View style={{ marginVertical: 16, alignItems: "center" }}>
+      <Text style={{ color: colors["text"], marginBottom: 8 }}>
+        Progress to {TARGET_DECIMALS} correct decimals
+      </Text>
+      <Progress.Bar
+        progress={progress}
+        width={250}
+        color={colors.positive}
+        unfilledColor={colors.primary}
+        borderWidth={0}
+        height={12}
+      />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
@@ -116,6 +133,8 @@ const Dashboard = () => {
         <Text style={styles.heading}>{formattedPi}</Text>
         <Text style={styles.subHeading}>Decimals: {decimalsToShow}</Text>
         <Text style={styles.subHeading}>Iteration: {state.iteration}</Text>
+
+        <ProgressBar />
 
         <View
           style={[
