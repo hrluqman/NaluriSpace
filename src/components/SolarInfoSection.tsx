@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { calculateCircumference } from "../utils/calc";
 import colors from "../theme/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import ButtonInfo from "./ButtonInfo";
 
 type PlanetBody = {
   name: string;
@@ -25,7 +25,15 @@ const formatNumber = (num: number): string => {
   });
 };
 
-const SolarCard = ({ body, units, piValue }: { body: PlanetBody; units: Units; piValue: string }) => {
+const SolarCard = ({
+  body,
+  units,
+  piValue,
+}: {
+  body: PlanetBody;
+  units: Units;
+  piValue: string;
+}) => {
   const circumference = calculateCircumference(piValue, body.radiusKm, units);
   const unitLabel = units;
 
@@ -54,25 +62,19 @@ const SolarInfoSection = ({
 
       <View style={styles.cardsContainer}>
         {planetBodies.map((body) => (
-          <SolarCard key={body.name} body={body} units={units} piValue={piValue} />
+          <SolarCard
+            key={body.name}
+            body={body}
+            units={units}
+            piValue={piValue}
+          />
         ))}
       </View>
 
-      <TouchableOpacity
-        style={styles.disclaimerContainer}
-        onPress={onShowPiModal}
-        accessibilityRole="button"
-        accessibilityLabel="Learn more about π calculation"
-      >
-        <Ionicons
-          name="information-circle-outline"
-          size={16}
-          color={colors["muted"]}
-        />
-        <Text style={styles.disclaimerText}>
-          Calculated using π ≈ {piValue}...
-        </Text>
-      </TouchableOpacity>
+      <ButtonInfo
+        onShowModal={onShowPiModal}
+        disclamerInfo={`Calculated using π ≈ ${piValue}...`}
+      />
     </View>
   );
 };

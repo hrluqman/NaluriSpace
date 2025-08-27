@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
   withTiming,
@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { calculateCircumference } from "../utils/calc";
 import colors from "../theme/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import ButtonInfo from "./ButtonInfo";
 
 type PlanetBody = {
   name: string;
@@ -178,21 +178,10 @@ const SolarVisualSection = ({
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.disclaimerContainer}
-        onPress={onShowScaleModal}
-        accessibilityRole="button"
-        accessibilityLabel="Learn more about logarithmic and linear scales"
-      >
-        <Ionicons
-          name="information-circle-outline"
-          size={16}
-          color={colors["muted"]}
-        />
-        <Text style={styles.disclaimerText}>
-          Visualized in logarithmic and linear scale
-        </Text>
-      </TouchableOpacity>
+      <ButtonInfo
+        onShowModal={onShowScaleModal}
+        disclamerInfo={"Visualized in logarithmic and linear scale"}
+      />
     </Animated.View>
   );
 };
