@@ -11,6 +11,6 @@ export function usePolling(callback: () => void | Promise<void>, intervalMs = 10
       callback();
     }, intervalMs);
 
-    return () => clearInterval(id); // cleanup on unmount
+    return () => clearInterval(id);
   }, [callback, intervalMs]);
 }
