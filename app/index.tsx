@@ -27,10 +27,25 @@ interface ControlButtonProps {
   colorType: "positive" | "danger" | "backgroundSecondary";
 }
 
+const TARGET_DECIMALS = 5;
+
 const Dashboard = () => {
   const { state, start, pause, stop, reset, loading, refreshStatus } = usePi();
-  const decimalsToShow = Math.min(Math.floor(state.iteration / 3), 15);
-  const formattedPi = Number(state.pi).toFixed(decimalsToShow);
+
+  // Calculate guaranteed decimals using Leibniz error bound
+  const N = Math.max(0, Math.floor(state.iteration));
+  const errBound = 4 / (2 * N + 1);
+  const guaranteedDecimals =
+    errBound > 0 && Number.isFinite(errBound)
+      ? Math.max(0, Math.floor(-Math.log10(2 * errBound)))
+      : 0;
+
+  const decimalsToShow = Math.min(guaranteedDecimals, TARGET_DECIMALS);
+
+  const parsedPi = Number(state.pi);
+  const piNum = Number.isFinite(parsedPi) ? parsedPi : Math.PI;
+  const formattedPi = piNum.toFixed(decimalsToShow);
+
   const statusColor =
     state.status === "running"
       ? colors["success"]
