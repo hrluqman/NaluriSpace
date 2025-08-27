@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { calculateCircumference } from "../utils/calc";
 import colors from "../theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { calculateCircumference } from "../utils/calc";
 
 type PlanetBody = {
   name: string;

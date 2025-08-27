@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Switch } from "react-native";
-import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import colors from "../theme/colors";
+import SegmentedControl from "@react-native-segmented-control/segmented-control";
 
 type Units = "kilometres" | "miles";
 

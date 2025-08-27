@@ -7,9 +7,9 @@ import Animated, {
   Easing,
   interpolate,
 } from "react-native-reanimated";
+import { calculateCircumference } from "../utils/calc";
 import colors from "../theme/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { calculateCircumference } from "../utils/calc";
 
 type PlanetBody = {
   name: string;

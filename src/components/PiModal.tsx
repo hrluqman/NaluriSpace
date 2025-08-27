@@ -15,8 +15,8 @@ import Animated, {
   Easing,
   interpolate,
 } from "react-native-reanimated";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import colors from "../theme/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface Props {
   visible: boolean;

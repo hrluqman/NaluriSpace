@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,8 +7,6 @@ import {
   View,
 } from "react-native";
 import { Link } from "expo-router";
-import colors from "../src/theme/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { usePi } from "../src/hooks/usePi";
 import { usePolling } from "../src/hooks/usePolling";
 import Animated, {
@@ -18,10 +17,11 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import { useEffect, useRef, useState } from "react";
-import * as Progress from "react-native-progress";
+import colors from "../src/theme/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import ButtonInfo from "../src/components/ButtonInfo";
 import LeibnizModal from "../src/components/LeibnizModal";
+import * as Progress from "react-native-progress";
 
 interface ControlButtonProps {
   onPress: () => void;
