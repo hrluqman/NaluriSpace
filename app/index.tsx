@@ -18,8 +18,10 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Progress from "react-native-progress";
+import ButtonInfo from "../src/components/ButtonInfo";
+import LeibnizModal from "../src/components/LeibnizModal";
 
 interface ControlButtonProps {
   onPress: () => void;
@@ -32,6 +34,7 @@ const TARGET_DECIMALS = 5;
 
 const Dashboard = () => {
   const { state, start, pause, stop, reset, loading, refreshStatus } = usePi();
+  const [showLeibnizModal, setShowLeibnizModal] = useState(false);
 
   // Calculate guaranteed decimals using Leibniz error bound
   const N = Math.max(0, Math.floor(state.iteration));
@@ -195,9 +198,18 @@ const Dashboard = () => {
           </Text>
         </View>
       </View>
+      <ButtonInfo
+        onShowModal={() => setShowLeibnizModal(true)}
+        disclamerInfo={"About Leibniz Series"}
+      />
       <Link href="/solar" style={styles.buttonLink}>
         View Solar's Calculation
       </Link>
+
+      <LeibnizModal
+        visible={showLeibnizModal}
+        onClose={() => setShowLeibnizModal(false)}
+      />
     </View>
   );
 };
@@ -220,7 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors["card"],
     padding: 32,
     borderRadius: 12,
-    marginVertical: 16,
+    marginTop: 16,
     borderWidth: 0.5,
     borderColor: colors["muted"],
   },
