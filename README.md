@@ -1,4 +1,4 @@
-# NaluriSpace — Frontend (Expo + TypeScript)
+# NaluriSpace
 
 NaluriSpace, a dark-theme mobile frontend built with **Expo (TypeScript)** and **expo-router** that consumes a backend Pi calculation server. The app displays the evolving value of π and computes planetary circumferences (Sun, Earth, Mars). 
 
@@ -98,7 +98,7 @@ cd NaluriSpace
 npm install
 ```
 
-3. Configure backend environment (see next section)
+3. Configure backend environment (see backend [README](https://github.com/hrluqman/naluri-space-pi))
 
 4. Start Expo:
 
@@ -171,7 +171,7 @@ npx expo start
 
 ---
 
-## Future enhancements (non-exhaustive)
+## Future enhancements
 
 * Switch from Context API to Redux for better scalability.
 * Create themed UI components for consistent design.
