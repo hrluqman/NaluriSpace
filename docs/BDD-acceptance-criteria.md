@@ -122,17 +122,6 @@ So that I can compare sizes and visualise them on a log scale.
 
 ---
 
-## Feature: UI & UX
-
-### Scenario: Progressive decimal display for π (presentation only)
-
-**Given** the backend supplies a high-precision `pi` string  
-**When** the Dashboard renders the pi value  
-**Then** the UI formats and reveals decimals progressively based on `iteration` (presentation logic)  
-**And** the app never modifies the backend-supplied `pi` value, only how many decimals are shown.  
-
----
-
 ## Notes & Non-functional requirements
 
 * **Polling interval**: default 1s; configurable in `usePolling` hook.
