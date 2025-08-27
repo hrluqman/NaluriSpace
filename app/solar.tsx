@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
+import { usePi } from "../src/hooks/usePi";
 import colors from "../src/theme/colors";
+import PiModal from "../src/components/PiModal";
+import ScaleModal from "../src/components/ScaleModal";
 import SolarInfoSection from "../src/components/SolarInfoSection";
 import SolarControlSection from "../src/components/SolarControlSection";
 import SolarVisualSection from "../src/components/SolarVisualSection";
-import PiModal from "../src/components/PiModal";
-import ScaleModal from "../src/components/ScaleModal";
-import { usePi } from "../src/hooks/usePi";
 
 type PlanetBody = {
   name: string;

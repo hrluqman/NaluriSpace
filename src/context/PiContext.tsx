@@ -1,7 +1,7 @@
-import { createContext, useState, useCallback, useEffect } from "react";
-import * as api from "../services/api";
-import { getItemJSON, setItemJSON, STORAGE_KEYS } from "../services/storage";
 import { Alert, Platform, ToastAndroid } from "react-native";
+import { createContext, useState, useCallback, useEffect } from "react";
+import { getItemJSON, setItemJSON, STORAGE_KEYS } from "../services/storage";
+import * as api from "../services/api";
 
 type PiState = {
   pi: string;
