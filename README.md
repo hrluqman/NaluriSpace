@@ -145,13 +145,13 @@ npx expo start
 ## Test evidence
 
 ### 1. **Dashboard Screen (Start/Pause/Stop/Reset)**
-![Dashboard Screen (Start/Pause/Stop/Reset)](docs/screenrecordings/)
+![Dashboard Screen (Start/Pause/Stop/Reset)](docs/screenrecordings/Dashboard_screen_online.mp4)
 
 ### 2. **Dashboard Screen (Offline)**
-![Dashboard Screen (Offline)](docs/screenrecordings/)
+![Dashboard Screen (Offline)](docs/screenrecordings/Dashboard_screen_offline.mp4)
 
 ### 3. **Solar Calculator Screen**
-![Solar Calculator Screen](docs/screenrecordings/)
+![Solar Calculator Screen](docs/screenrecordings/Solar_Calculator_Screen.mp4)
 
 ---
 
